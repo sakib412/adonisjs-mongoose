@@ -1,0 +1,72 @@
+{{{
+  exports({
+    to: app.configPath('database.ts')
+  })
+}}}
+/*
+ * Config file for MongoDB connections
+ */
+
+import { defineConfig } from 'adonisjs-mongoose'
+import env from '#start/env'
+
+const databaseConfig = defineConfig({
+  /**
+   * Default connection name
+   */
+  connection: env.get('DEFAULT_MONGODB_CONNECTION'),
+
+  /**
+   * All available connections
+   */
+  connections: {
+    /**
+     * Primary MongoDB connection
+     */
+    mongodb: {
+      /**
+       * MongoDB connection URI
+       * When provided, takes precedence over individual connection options
+       */
+      uri: env.get('MONGODB_URI'),
+
+      /**
+       * Individual connection options
+       * Used only when uri is not provided
+       */
+      connection: {
+        host: env.get('MONGODB_HOST'),
+        port: env.get('MONGODB_PORT'),
+        database: env.get('MONGODB_DATABASE'),
+        user: env.get('MONGODB_USER'),
+        password: env.get('MONGODB_PASSWORD'),
+      },
+
+      /**
+       * Mongoose connection options
+       * @see https://mongoosejs.com/docs/connections.html#options
+       */
+      options: {
+        // Add any mongoose connection options here
+        // retryWrites: true,
+        // w: 'majority',
+      },
+
+      /**
+       * Enable debug mode to log all queries
+       */
+      debug: false,
+    },
+
+    /**
+     * Example: Secondary MongoDB connection
+     * Uncomment to use multiple connections
+     */
+    // mongodb_secondary: {
+    //   uri: env.get('MONGODB_SECONDARY_URI'),
+    //   options: {},
+    // },
+  },
+})
+
+export default databaseConfig

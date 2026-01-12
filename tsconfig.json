@@ -1,0 +1,28 @@
+{
+  "extends": "@adonisjs/tsconfig/tsconfig.package.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./build",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*",
+    "providers/**/*",
+    "services/**/*",
+    "configure.ts",
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "test"
+  ]
+}
