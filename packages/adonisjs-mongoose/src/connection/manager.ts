@@ -50,7 +50,7 @@ export class ConnectionManager implements ConnectionManagerContract {
       state: 'open',
       timestamp: new Date(),
     })
-    
+
     internalConnection.state = 'open'
   }
 
@@ -111,15 +111,12 @@ export class ConnectionManager implements ConnectionManagerContract {
    */
   add(connectionName: string, config: MongooseConnectionConfig): void {
     if (this.has(connectionName)) {
-      this.logger.trace(
-        { connection: connectionName },
-        'connection already exists, skipping add'
-      )
+      this.logger.trace({ connection: connectionName }, 'connection already exists, skipping add')
       return
     }
 
     this.logger.trace({ connection: connectionName }, 'adding connection to manager')
-    
+
     this.connections.set(connectionName, {
       name: connectionName,
       config,
@@ -132,7 +129,7 @@ export class ConnectionManager implements ConnectionManagerContract {
    */
   async connect(connectionName: string): Promise<void> {
     const connectionNode = this.connections.get(connectionName)
-    
+
     if (!connectionNode) {
       throw new Error(
         `Connection "${connectionName}" is not registered. Make sure to add it first using manager.add()`

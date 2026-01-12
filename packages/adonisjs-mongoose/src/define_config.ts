@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { DatabaseConfig } from './main.js'
+import type { DatabaseConfig } from './types/main.js'
 
 /**
  * Helper to define database config with type safety

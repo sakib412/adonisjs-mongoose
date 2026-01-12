@@ -38,11 +38,12 @@ export default class MongooseServiceProvider {
    */
   register(): void {
     this.app.container.singleton(Database, async (resolver) => {
-      const configProvider = this.app.config.get<DatabaseConfig>('database')
+      const configProvider = this.app.config.get<DatabaseConfig>('mongoose')
       const emitter = await resolver.make('emitter')
       const logger = await resolver.make('logger')
 
       const db = new Database(configProvider, logger, emitter)
+      logger.info({ configProvider }, 'Mongoose Database instance created')
       return db
     })
 

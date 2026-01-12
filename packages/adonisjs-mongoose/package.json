@@ -2,7 +2,7 @@
   "name": "adonisjs-mongoose",
   "version": "0.0.1",
   "description": "Mongoose provider for AdonisJS 6 with multi-connection support",
-  "main": "build/index.js",
+  "main": "index.ts",
   "type": "module",
   "files": [
     "build",
@@ -14,10 +14,11 @@
   },
   "packageManager": "pnpm@10.28.0",
   "exports": {
-    ".": "./build/index.js",
-    "./types": "./build/src/types/main.js",
-    "./database": "./build/src/database/main.js",
-    "./services/main": "./build/services/mongoose_service.js"
+    ".": "./index.ts",
+    "./types": "./src/types/main.ts",
+    "./database": "./src/database/main.ts",
+    "./services/main": "./services/mongoose_service.ts",
+    "./providers/mongoose_provider": "./providers/mongoose_provider.ts"
   },
   "scripts": {
     "pretest": "pnpm run build",

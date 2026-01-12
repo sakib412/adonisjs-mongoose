@@ -66,7 +66,7 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
     const { host, port, database, user, password } = this.config.connection!
     const auth = user && password ? `${user}:${password}@` : ''
     const portString = port ? `:${port}` : ''
-    
+
     return `mongodb://${auth}${host}${portString}/${database}`
   }
 
@@ -85,10 +85,7 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
     })
 
     this.#connection.on('error', (error: Error) => {
-      this.logger.error(
-        { connection: this.name, err: error },
-        'mongoose connection error'
-      )
+      this.logger.error({ connection: this.name, err: error }, 'mongoose connection error')
       this.emit('error', error, this)
     })
 
@@ -143,17 +140,14 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
    */
   async connect(): Promise<void> {
     if (this.#state === 'connected' || this.#state === 'connecting') {
-      this.logger.trace(
-        { connection: this.name },
-        'connection already established or in progress'
-      )
+      this.logger.trace({ connection: this.name }, 'connection already established or in progress')
       return
     }
 
     try {
       this.#state = 'connecting'
       const uri = this.#buildConnectionUri()
-      
+
       this.logger.trace({ connection: this.name }, 'connecting to mongodb')
 
       // Enable debug mode if configured
@@ -163,7 +157,7 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
 
       // Create connection
       this.#connection = mongoose.createConnection(uri, this.config.options)
-      
+
       // Setup monitoring
       this.#monitorConnection()
 
@@ -206,12 +200,12 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
     try {
       this.#state = 'disconnecting'
       this.logger.trace({ connection: this.name }, 'disconnecting mongoose connection')
-      
+
       await this.#connection.close()
-      
+
       this.#connection = undefined
       this.#state = 'disconnected'
-      
+
       this.logger.info({ connection: this.name }, 'mongoose connection closed')
     } catch (error) {
       this.logger.error(
