@@ -39,7 +39,7 @@
     "odm",
     "database"
   ],
-  "author": "",
+  "author": "Najmus Sakib <nazmusakib412@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/sakib412/adonisjs-mongoose#readme",
   "repository": {
