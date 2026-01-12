@@ -40,7 +40,7 @@ export class Database extends Macroable implements DatabaseContract {
     private emitter: Emitter<any>
   ) {
     super()
-    
+
     this.manager = new ConnectionManager(this.logger, this.emitter)
     this.primaryConnectionName = this.config.connection
 

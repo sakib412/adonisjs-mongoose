@@ -8,12 +8,7 @@
  */
 
 import type { ApplicationService } from '@adonisjs/core/types'
-import type {
-  DatabaseConfig,
-  DbConnectionEventNode,
-  DbErrorEventNode,
-  MongooseConnectionContract,
-} from '../src/types/main.js'
+import type { DatabaseConfig, DbConnectionEventNode, DbErrorEventNode } from '../src/types/main.js'
 import { Database } from '../src/database/main.js'
 import { BaseModel } from '../src/model/base_model.js'
 
@@ -94,6 +89,7 @@ export default class MongooseServiceProvider {
   /**
    * Setup event listeners for logging and debugging
    */
+  // @ts-expect-error will use later private field syntax
   async #setupEventListeners(db: Database): Promise<void> {
     const emitter = await this.app.container.make('emitter')
     const logger = await this.app.container.make('logger')

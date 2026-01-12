@@ -13,7 +13,7 @@ import { stubsRoot } from './stubs/main.js'
 /**
  * Configures the package
  */
-export async function configure(command: typeof Configure) {
+export async function configure(command: Configure) {
   const codemods = await command.createCodemods()
 
   /**
@@ -55,16 +55,5 @@ export async function configure(command: typeof Configure) {
       MONGODB_USER: `Env.schema.string.optional()`,
       MONGODB_PASSWORD: `Env.schema.string.optional()`,
     },
-  })
-
-  /**
-   * Add types to tsconfig.json
-   */
-  await codemods.updateTsConfig((tsConfig) => {
-    tsConfig.merge({
-      compilerOptions: {
-        types: ['adonisjs-mongoose/types'],
-      },
-    })
   })
 }
