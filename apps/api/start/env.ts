@@ -34,5 +34,14 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring session package
   |----------------------------------------------------------
   */
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const)
+  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring mongoose connection
+  |----------------------------------------------------------
+  */
+  DEFAULT_MONGODB_CONNECTION: Env.schema.enum(['primary', 'secondary'] as const),
+  MONGODB_URI: Env.schema.string(),
+  MONGODB_SECONDARY_URI: Env.schema.string.optional(),
 })

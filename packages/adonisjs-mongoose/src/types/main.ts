@@ -1,7 +1,7 @@
 /*
  * adonisjs-mongoose
  *
- * (c) Your Name
+ * (c) Najmus Sakib
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -49,6 +49,45 @@ export type MongooseConnectionConfig = {
    */
   debug?: boolean
 }
+
+/**
+ * Record of multiple Mongoose connections defined in the user configuration.
+ * Keys are connection names, values are mongoose connection configurations.
+ *
+ * @example
+ * ```ts
+ * const connections: MongooseConnectionsList = {
+ *   mongodb: {
+ *     uri: 'mongodb://localhost:27017/mydb'
+ *   },
+ *   mongodb_logs: {
+ *     connection: {
+ *       host: 'logs.mongodb.com',
+ *       port: 27017,
+ *       database: 'logs'
+ *     }
+ *   }
+ * }
+ * ```
+ */
+export type MongooseConnectionsList = Record<string, MongooseConnectionConfig>
+
+/**
+ * Interface for defining available Mongoose connections.
+ * This is augmented by users to provide type-safe connection access.
+ *
+ * @example
+ * ```ts
+ * declare module 'adonisjs-mongoose/types' {
+ *   interface MongooseConnections {
+ *     mongodb: MongooseConnectionConfig
+ *     mongodb_logs: MongooseConnectionConfig
+ *     mongodb_analytics: MongooseConnectionConfig
+ *   }
+ * }
+ * ```
+ */
+export interface MongooseConnections {}
 
 /**
  * Main database configuration
@@ -234,3 +273,19 @@ export type DbConnectionEventNode = DbEventNode & {
 export type DbErrorEventNode = DbEventNode & {
   error: Error
 }
+
+/**
+ * Mongoose service interface representing the singleton instance registered with the IoC container.
+ * Extends Database with the user-defined connections from module augmentation.
+ *
+ * @example
+ * ```ts
+ * // In your application
+ * const db = await app.container.make('mongoose.db')
+ *
+ * // Type-safe connection access
+ * const mainConnection = db.connection('mongodb')
+ * const logsConnection = db.connection('mongodb_logs')
+ * ```
+ */
+export interface MongooseService extends DatabaseContract {}

@@ -5,11 +5,11 @@ Mongoose provider for AdonisJS 6 with multi-connection support, similar to Lucid
 ## Features
 
 - 🔌 Multi-connection support
-- 🎯 Default connection with easy switching
+- 🎯 Type-safe configuration with validation
 - 🏗️ BaseModel similar to Lucid
 - 🔄 Proper AdonisJS lifecycle management
 - 🌍 Environment variable support
-- 📦 TypeScript support
+- 📦 Full TypeScript support with module augmentation
 
 ## Installation
 
@@ -37,17 +37,19 @@ This will create a `config/database.ts` file:
 import { defineConfig } from 'adonisjs-mongoose'
 import env from '#start/env'
 
-const mongoConfig = defineConfig({
+const databaseConfig = defineConfig({
   connection: env.get('DEFAULT_MONGODB_CONNECTION', 'mongodb'),
   connections: {
     mongodb: {
       uri: env.get('MONGODB_URI'),
       // or individual options
-      host: env.get('MONGODB_HOST'),
-      port: env.get('MONGODB_PORT'),
-      database: env.get('MONGODB_DATABASE'),
-      user: env.get('MONGODB_USER'),
-      password: env.get('MONGODB_PASSWORD'),
+      connection: {
+        host: env.get('MONGODB_HOST'),
+        port: env.get('MONGODB_PORT'),
+        database: env.get('MONGODB_DATABASE'),
+        user: env.get('MONGODB_USER'),
+        password: env.get('MONGODB_PASSWORD'),
+      },
       options: {
         // Additional mongoose connection options
       },
@@ -58,20 +60,44 @@ const mongoConfig = defineConfig({
   },
 })
 
-export default mongoConfig
+export default databaseConfig
 ```
+
+The `defineConfig` function validates your configuration at startup and provides:
+
+- Runtime validation for required properties
+- Type-safe connection names with generics
+- Ensures default connection exists in connections list
+
+### Type Safety
+
+For enhanced type safety, augment the module types in your application:
+
+```typescript
+// types/mongoose.ts
+import type { MongooseConnectionConfig } from 'adonisjs-mongoose'
+
+declare module 'adonisjs-mongoose/types' {
+  interface MongooseConnections {
+    mongodb: MongooseConnectionConfig
+    mongodb_secondary: MongooseConnectionConfig
+  }
+}
+```
+
+See [TYPE_AUGMENTATION.md](./docs/TYPE_AUGMENTATION.md) for more details.
 
 ## Usage
 
 ### Using the Database Service
 
 ```typescript
-import db from '@adonisjs/core/services/mongoose'
+import db from '#services/mongoose_service'
 
 // Use default connection
 const users = await db.connection().model('User').find()
 
-// Use named connection
+// Use named connection (type-safe with augmentation)
 const logs = await db.connection('mongodb_secondary').model('Log').find()
 ```
 

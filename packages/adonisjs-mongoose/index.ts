@@ -20,6 +20,8 @@ export { ConnectionManager } from './src/connection/manager.js'
 export type {
   DatabaseConfig,
   MongooseConnectionConfig,
+  MongooseConnectionsList,
+  MongooseConnections,
   MongoDBConnectionNode,
   DatabaseContract,
   MongooseConnectionContract,
@@ -28,4 +30,5 @@ export type {
   DbEventNode,
   DbConnectionEventNode,
   DbErrorEventNode,
+  MongooseService,
 } from './src/types/main.js'

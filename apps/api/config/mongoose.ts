@@ -2,12 +2,12 @@ import { defineConfig } from 'adonisjs-mongoose'
 import env from '#start/env'
 
 const mongoConfig = defineConfig({
-  connection: env.get('DEFAULT_MONGODB_CONNECTION', 'mongodb'),
+  connection: env.get('DEFAULT_MONGODB_CONNECTION', 'primary'),
   connections: {
-    mongodb: {
+    primary: {
       uri: env.get('MONGODB_URI'),
     },
-    mongodb_secondary: {
+    secondary: {
       uri: env.get('MONGODB_SECONDARY_URI'),
     },
   },

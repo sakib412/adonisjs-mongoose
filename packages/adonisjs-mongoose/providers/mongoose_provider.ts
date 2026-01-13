@@ -43,7 +43,6 @@ export default class MongooseServiceProvider {
       const logger = await resolver.make('logger')
 
       const db = new Database(configProvider, logger, emitter)
-      logger.info({ configProvider }, 'Mongoose Database instance created')
       return db
     })
 
