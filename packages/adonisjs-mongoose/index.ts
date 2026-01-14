@@ -10,7 +10,7 @@
 export { configure } from './configure.js'
 export { defineConfig } from './src/define_config.js'
 export { Database } from './src/database/main.js'
-export { BaseModel } from './src/model/base_model.js'
+// export { BaseModel } from './src/model/base_model.js'
 export { Connection } from './src/connection/index.js'
 export { ConnectionManager } from './src/connection/manager.js'
 

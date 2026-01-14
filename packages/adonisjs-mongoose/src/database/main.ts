@@ -18,6 +18,7 @@ import type {
   ConnectionNode,
 } from '../types/main.js'
 import { ConnectionManager } from '../connection/manager.js'
+import { Exception } from '@poppinss/utils'
 
 /**
  * Database class manages multiple mongoose connections and provides
@@ -73,7 +74,7 @@ export class Database extends Macroable implements DatabaseContract {
      */
     const rawConnection = this.getRawConnection(connectionName)
     if (!rawConnection) {
-      throw new Error(
+      throw new Exception(
         `Connection "${connectionName}" is not configured. Check your database config`
       )
     }
@@ -100,7 +101,7 @@ export class Database extends Macroable implements DatabaseContract {
      */
     const connection = rawConnection.connection
     if (!connection) {
-      throw new Error(
+      throw new Exception(
         `Connection "${connectionName}" is not ready. This is likely a connection timing issue.`
       )
     }

@@ -10,7 +10,7 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import type { DatabaseConfig, DbConnectionEventNode, DbErrorEventNode } from '../src/types/main.js'
 import { Database } from '../src/database/main.js'
-import { BaseModel } from '../src/model/base_model.js'
+// import { BaseModel } from '../src/model/base_model.js'
 
 /**
  * Extending AdonisJS types
@@ -56,7 +56,7 @@ export default class MongooseServiceProvider {
     const db = await this.app.container.make('mongoose.db')
 
     // Inject database instance into BaseModel
-    BaseModel.$db = db
+    // BaseModel.$db = db
 
     // Setup event listeners if needed
     await this.#setupEventListeners(db)

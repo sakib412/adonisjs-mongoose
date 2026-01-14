@@ -3,18 +3,11 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "./build",
-    "allowJs": true
+    "allowJs": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "incremental": true
   },
-  "include": [
-    "src/**/*",
-    "providers/**/*",
-    "services/**/*",
-    "configure.ts",
-    "index.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "test"
-  ]
+  "include": ["index.ts", "configure.ts", "src/**/*.ts", "providers/**/*.ts", "services/**/*.ts"],
+  "exclude": ["node_modules", "build", "tests", "examples", "docs"]
 }

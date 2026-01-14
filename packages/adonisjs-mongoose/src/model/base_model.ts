@@ -7,12 +7,29 @@
  * file that was distributed with this source code.
  */
 
-import type { Connection as MongooseConnection, Model, Schema, Document } from 'mongoose'
+import { Exception } from '@poppinss/utils'
+import type { Connection as MongooseConnection, Model, Schema } from 'mongoose'
 import type { DatabaseContract } from '../types/main.js'
 
 /**
- * Base model for all mongoose models
+ * Base model for all mongoose models in AdonisJS
  * Provides connection management and model registry
+ *
+ * @example
+ * ```ts
+ * import { Schema } from 'mongoose'
+ * import { BaseModel } from '@ezycourse/adonisjs-mongoose'
+ *
+ * export default class User extends BaseModel {
+ *   static schema = new Schema({
+ *     name: { type: String, required: true },
+ *     email: { type: String, required: true, unique: true }
+ *   })
+ * }
+ *
+ * // Usage
+ * const users = await User.find({ name: 'John' })
+ * ```
  */
 export class BaseModel {
   /**
@@ -34,27 +51,52 @@ export class BaseModel {
 
   /**
    * Mongoose schema definition
+   * Must be defined in child classes
    */
   static schema: Schema
 
   /**
-   * Compiled mongoose models cache
-   * Key: connection name, Value: compiled model
+   * Compiled mongoose models cache (shared across all models)
+   * Key: "{connectionName}:{modelName}", Value: compiled model
    */
   private static modelCache: Map<string, Model<any>> = new Map()
 
   /**
    * Get the connection instance for this model
+   *
+   * @throws {Error} If database is not initialized or connection not found
    */
   static getConnection(): MongooseConnection {
+    if (!this.$db) {
+      throw new Exception(
+        'Database not initialized. Ensure DatabaseProvider is registered in your AdonisJS application.'
+      )
+    }
+
     const connectionName = this.connection || this.$db.primaryConnectionName
-    return this.$db.connection(connectionName)
+    const conn = this.$db.connection(connectionName)
+
+    if (!conn) {
+      throw new Error(
+        `Connection "${connectionName}" not found. Check your database configuration.`
+      )
+    }
+
+    return conn
   }
 
   /**
    * Get the compiled mongoose model
+   *
+   * @throws {Error} If schema is not defined
    */
-  static getModel<T = Document>(): Model<T> {
+  static getModel() {
+    if (!this.schema) {
+      throw new Error(
+        `Schema not defined for model ${this.name}. Define a static schema property in your model class.`
+      )
+    }
+
     const connectionName = this.connection || this.$db.primaryConnectionName
     const cacheKey = `${connectionName}:${this.name}`
 
@@ -70,7 +112,7 @@ export class BaseModel {
     const collectionName = this.collectionName || undefined
 
     // Compile and cache model
-    const model = connection.model<T>(this.name, this.schema, collectionName)
+    const model = connection.model(this.name, this.schema, collectionName)
     this.modelCache.set(cacheKey, model)
 
     return model
@@ -84,106 +126,157 @@ export class BaseModel {
   }
 
   /**
+   * Create a new document instance
+   *
+   * @param data - Initial document data
+   * @returns New document instance
+   */
+  static new(data?: Record<string, any>) {
+    const Model = this.getModel()
+    return new Model(data)
+  }
+
+  /**
    * Proxy static methods to mongoose model
    */
 
-  static find(...args: Parameters<Model<any>['find']>) {
+  static find(...args: Parameters<Model<any>['find']>): ReturnType<Model<any>['find']> {
     return this.getModel().find(...args)
   }
 
-  static findOne(...args: Parameters<Model<any>['findOne']>) {
+  static findOne(...args: Parameters<Model<any>['findOne']>): ReturnType<Model<any>['findOne']> {
     return this.getModel().findOne(...args)
   }
 
-  static findById(...args: Parameters<Model<any>['findById']>) {
+  static findById(...args: Parameters<Model<any>['findById']>): ReturnType<Model<any>['findById']> {
     return this.getModel().findById(...args)
   }
 
-  static findByIdAndUpdate(...args: Parameters<Model<any>['findByIdAndUpdate']>) {
+  static findByIdAndUpdate(
+    ...args: Parameters<Model<any>['findByIdAndUpdate']>
+  ): ReturnType<Model<any>['findByIdAndUpdate']> {
     return this.getModel().findByIdAndUpdate(...args)
   }
 
-  static findByIdAndDelete(...args: Parameters<Model<any>['findByIdAndDelete']>) {
+  static findByIdAndDelete(
+    ...args: Parameters<Model<any>['findByIdAndDelete']>
+  ): ReturnType<Model<any>['findByIdAndDelete']> {
     return this.getModel().findByIdAndDelete(...args)
   }
 
-  static findOneAndUpdate(...args: Parameters<Model<any>['findOneAndUpdate']>) {
+  static findOneAndUpdate(
+    ...args: Parameters<Model<any>['findOneAndUpdate']>
+  ): ReturnType<Model<any>['findOneAndUpdate']> {
     return this.getModel().findOneAndUpdate(...args)
   }
 
-  static findOneAndDelete(...args: Parameters<Model<any>['findOneAndDelete']>) {
+  static findOneAndDelete(
+    ...args: Parameters<Model<any>['findOneAndDelete']>
+  ): ReturnType<Model<any>['findOneAndDelete']> {
     return this.getModel().findOneAndDelete(...args)
   }
 
-  static findOneAndReplace(...args: Parameters<Model<any>['findOneAndReplace']>) {
+  static findOneAndReplace(
+    ...args: Parameters<Model<any>['findOneAndReplace']>
+  ): ReturnType<Model<any>['findOneAndReplace']> {
     return this.getModel().findOneAndReplace(...args)
   }
 
-  static create(...args: Parameters<Model<any>['create']>) {
+  static create(...args: Parameters<Model<any>['create']>): ReturnType<Model<any>['create']> {
     return this.getModel().create(...args)
   }
 
-  static insertMany(...args: Parameters<Model<any>['insertMany']>) {
+  static insertMany(
+    ...args: Parameters<Model<any>['insertMany']>
+  ): ReturnType<Model<any>['insertMany']> {
     return this.getModel().insertMany(...args)
   }
 
-  static updateOne(...args: Parameters<Model<any>['updateOne']>) {
+  static updateOne(
+    ...args: Parameters<Model<any>['updateOne']>
+  ): ReturnType<Model<any>['updateOne']> {
     return this.getModel().updateOne(...args)
   }
 
-  static updateMany(...args: Parameters<Model<any>['updateMany']>) {
+  static updateMany(
+    ...args: Parameters<Model<any>['updateMany']>
+  ): ReturnType<Model<any>['updateMany']> {
     return this.getModel().updateMany(...args)
   }
 
-  static deleteOne(...args: Parameters<Model<any>['deleteOne']>) {
+  static deleteOne(
+    ...args: Parameters<Model<any>['deleteOne']>
+  ): ReturnType<Model<any>['deleteOne']> {
     return this.getModel().deleteOne(...args)
   }
 
-  static deleteMany(...args: Parameters<Model<any>['deleteMany']>) {
+  static deleteMany(
+    ...args: Parameters<Model<any>['deleteMany']>
+  ): ReturnType<Model<any>['deleteMany']> {
     return this.getModel().deleteMany(...args)
   }
 
-  static countDocuments(...args: Parameters<Model<any>['countDocuments']>) {
+  static replaceOne(
+    ...args: Parameters<Model<any>['replaceOne']>
+  ): ReturnType<Model<any>['replaceOne']> {
+    return this.getModel().replaceOne(...args)
+  }
+
+  static countDocuments(
+    ...args: Parameters<Model<any>['countDocuments']>
+  ): ReturnType<Model<any>['countDocuments']> {
     return this.getModel().countDocuments(...args)
   }
 
-  static estimatedDocumentCount(...args: Parameters<Model<any>['estimatedDocumentCount']>) {
+  static estimatedDocumentCount(
+    ...args: Parameters<Model<any>['estimatedDocumentCount']>
+  ): ReturnType<Model<any>['estimatedDocumentCount']> {
     return this.getModel().estimatedDocumentCount(...args)
   }
 
-  static distinct(...args: Parameters<Model<any>['distinct']>) {
+  static distinct(...args: Parameters<Model<any>['distinct']>): ReturnType<Model<any>['distinct']> {
     return this.getModel().distinct(...args)
   }
 
-  static exists(...args: Parameters<Model<any>['exists']>) {
+  static exists(...args: Parameters<Model<any>['exists']>): ReturnType<Model<any>['exists']> {
     return this.getModel().exists(...args)
   }
 
-  static where(...args: Parameters<Model<any>['where']>) {
+  static where(...args: Parameters<Model<any>['where']>): ReturnType<Model<any>['where']> {
     return this.getModel().where(...args)
   }
 
-  static aggregate(...args: Parameters<Model<any>['aggregate']>) {
+  static aggregate(
+    ...args: Parameters<Model<any>['aggregate']>
+  ): ReturnType<Model<any>['aggregate']> {
     return this.getModel().aggregate(...args)
   }
 
-  static bulkWrite(...args: Parameters<Model<any>['bulkWrite']>) {
+  static bulkWrite(
+    ...args: Parameters<Model<any>['bulkWrite']>
+  ): ReturnType<Model<any>['bulkWrite']> {
     return this.getModel().bulkWrite(...args)
   }
 
-  static watch(...args: Parameters<Model<any>['watch']>) {
+  static watch(...args: Parameters<Model<any>['watch']>): ReturnType<Model<any>['watch']> {
     return this.getModel().watch(...args)
   }
 
-  static hydrate(...args: Parameters<Model<any>['hydrate']>) {
+  static hydrate(...args: Parameters<Model<any>['hydrate']>): ReturnType<Model<any>['hydrate']> {
     return this.getModel().hydrate(...args)
   }
 
-  static populate(...args: Parameters<Model<any>['populate']>) {
+  static populate(...args: Parameters<Model<any>['populate']>): ReturnType<Model<any>['populate']> {
     return this.getModel().populate(...args)
   }
 
-  static startSession(...args: Parameters<Model<any>['startSession']>) {
+  static startSession(
+    ...args: Parameters<Model<any>['startSession']>
+  ): ReturnType<Model<any>['startSession']> {
     return this.getModel().startSession(...args)
+  }
+
+  static validate(...args: Parameters<Model<any>['validate']>): ReturnType<Model<any>['validate']> {
+    return this.getModel().validate(...args)
   }
 }
