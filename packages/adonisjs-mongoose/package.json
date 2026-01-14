@@ -1,6 +1,6 @@
 {
   "name": "adonisjs-mongoose",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Mongoose provider for AdonisJS 6 with multi-connection support",
   "main": "index.ts",
   "type": "module",
