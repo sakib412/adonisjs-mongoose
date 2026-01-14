@@ -1,6 +1,6 @@
 {{{
   exports({
-    to: app.configPath('database.ts')
+    to: app.configPath('mongoose.ts')
   })
 }}}
 /*

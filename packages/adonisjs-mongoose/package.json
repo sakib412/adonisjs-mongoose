@@ -2,32 +2,40 @@
   "name": "adonisjs-mongoose",
   "version": "0.0.3",
   "description": "Mongoose provider for AdonisJS 6 with multi-connection support",
-  "main": "index.ts",
+  "main": "./build/index.js",
   "type": "module",
   "files": [
     "build",
+    "README.md",
+    "LICENSE",
+    "!index.ts",
     "!build/test",
     "!build/test-helpers",
     "!build/*.tsbuildinfo"
   ],
   "engines": {
-    "node": ">=20.6.0"
+    "node": ">=22"
   },
   "packageManager": "pnpm@10.28.0",
   "exports": {
-    ".": "./index.ts",
-    "./types": "./src/types/main.ts",
-    "./database": "./src/database/main.ts",
-    "./services/main": "./services/mongoose_service.ts",
-    "./providers/mongoose_provider": "./providers/mongoose_provider.ts"
+    ".": "./build/index.js",
+    "./types": "./build/src/types/main.js",
+    "./database": "./build/src/database/main.js",
+    "./services/main": "./build/services/mongoose_service.js",
+    "./providers/mongoose_provider": "./build/providers/mongoose_provider.js"
   },
   "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --fix --cache",
     "pretest": "pnpm run build",
     "test": "node --loader=ts-node/esm --test",
     "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
     "check-types": "tsc --noEmit",
+    "prebuild": "pnpm run clean",
     "build": "tsc",
     "postbuild": "pnpm run copy:templates",
+    "dev": "tsc --watch",
+    "clean": "del-cli build",
     "prepublishOnly": "pnpm run build"
   },
   "keywords": [
@@ -56,9 +64,8 @@
     "@swc/core": "^1.15.8",
     "@types/node": "^24",
     "copyfiles": "^2.4.1",
-    "del-cli": "^6.0.0",
+    "del-cli": "^7.0.0",
     "eslint": "^9.39.2",
-    "np": "^10.2.0",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "turbo": "^2.7.4",

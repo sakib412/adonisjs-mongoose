@@ -32,18 +32,18 @@ export default class ProductsController {
 
     if (minPrice || maxPrice) {
       query.price = {}
-      if (minPrice) query.price.$gte = parseFloat(minPrice)
-      if (maxPrice) query.price.$lte = parseFloat(maxPrice)
+      if (minPrice) query.price.$gte = Number.parseFloat(minPrice)
+      if (maxPrice) query.price.$lte = Number.parseFloat(maxPrice)
     }
 
     // Calculate pagination
-    const skip = (parseInt(page) - 1) * parseInt(limit)
+    const skip = (Number.parseInt(page) - 1) * Number.parseInt(limit)
 
     // Execute queries
     const [products, total] = await Promise.all([
       Product.find(query)
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(Number.parseInt(limit))
         .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
         .lean(),
       Product.countDocuments(query),
@@ -54,9 +54,9 @@ export default class ProductsController {
       data: products,
       meta: {
         total,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit)),
+        page: Number.parseInt(page),
+        limit: Number.parseInt(limit),
+        totalPages: Math.ceil(total / Number.parseInt(limit)),
       },
     })
   }

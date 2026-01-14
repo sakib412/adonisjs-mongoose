@@ -48,12 +48,7 @@ export async function configure(command: Configure) {
     leadingComment: 'Variables for configuring the MongoDB connection',
     variables: {
       DEFAULT_MONGODB_CONNECTION: `Env.schema.string()`,
-      MONGODB_URI: `Env.schema.string.optional()`,
-      MONGODB_HOST: `Env.schema.string({ format: 'host' })`,
-      MONGODB_PORT: `Env.schema.number()`,
-      MONGODB_DATABASE: `Env.schema.string()`,
-      MONGODB_USER: `Env.schema.string.optional()`,
-      MONGODB_PASSWORD: `Env.schema.string.optional()`,
+      MONGODB_URI: `Env.schema.string()`,
     },
   })
 }

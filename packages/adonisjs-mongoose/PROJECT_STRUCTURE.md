@@ -42,18 +42,21 @@ adonis-mongoose/
 ## Key Features Implemented
 
 ### 1. Multi-Connection Support ✅
+
 - Define multiple MongoDB connections in config
 - Switch between connections using `static connection` in models
 - Default connection support
 - Connection pooling and lifecycle management
 
 ### 2. Configuration System ✅
+
 - Similar to Lucid's `defineConfig` pattern
 - Support for both connection URI and individual options
 - Environment variable integration
 - Type-safe configuration
 
 ### 3. Connection Management ✅
+
 - **Connection class**: Manages single mongoose connection
   - Event monitoring (connected, disconnected, error)
   - Connection state tracking
@@ -67,12 +70,14 @@ adonis-mongoose/
   - Proper shutdown handling
 
 ### 4. Database Service ✅
+
 - Central database access point
 - Connection retrieval
 - Manager integration
 - Macroable support for extensibility
 
 ### 5. BaseModel ✅
+
 - Similar to Lucid BaseModel
 - Automatic connection management
 - Model caching for performance
@@ -81,6 +86,7 @@ adonis-mongoose/
 - Custom collection naming
 
 ### 6. Provider Integration ✅
+
 - Proper AdonisJS lifecycle hooks:
   - `register()`: Container bindings
   - `boot()`: Setup BaseModel
@@ -91,6 +97,7 @@ adonis-mongoose/
 - Development mode logging
 
 ### 7. Environment Variables ✅
+
 - `DEFAULT_MONGODB_CONNECTION`: Default connection name
 - `MONGODB_URI`: Connection URI (takes precedence)
 - `MONGODB_HOST`, `MONGODB_PORT`, etc.: Individual options
@@ -98,6 +105,7 @@ adonis-mongoose/
 - Validation through env schema
 
 ### 8. Type Safety ✅
+
 - Full TypeScript support
 - Type definitions for all contracts
 - Declaration module augmentation
@@ -130,11 +138,15 @@ adonis-mongoose/
 // 1. Define model
 export class User extends BaseModel {
   static connection = 'mongodb' // optional
-  static schema = new Schema({ /* ... */ })
+  static schema = new Schema({
+    /* ... */
+  })
 }
 
 // 2. Use model
-const user = await User.create({ /* ... */ })
+const user = await User.create({
+  /* ... */
+})
 
 // What happens internally:
 // - User.create() calls User.getModel()
@@ -150,28 +162,37 @@ const user = await User.create({ /* ... */ })
 ## Architecture Decisions
 
 ### 1. Lazy Connection
+
 Connections are not established at boot time, but when first accessed. This:
+
 - Reduces startup time
 - Prevents unnecessary connections
 - Follows Lucid's pattern
 
 ### 2. Model Caching
+
 Compiled mongoose models are cached per connection to avoid recompilation:
+
 - Key format: `connectionName:ModelName`
 - Improves performance
 - Can be cleared for testing
 
 ### 3. Event-Based Monitoring
+
 Connection lifecycle emits events for:
+
 - Logging and debugging
 - Error tracking
 - Custom monitoring integration
 
 ### 4. Macroable Pattern
+
 Database class extends Macroable allowing users to add custom methods at runtime
 
 ### 5. Native Mongoose API
+
 BaseModel proxies all mongoose methods instead of creating wrappers, ensuring:
+
 - Full mongoose feature support
 - No learning curve for mongoose users
 - Easy updates when mongoose changes
@@ -179,36 +200,38 @@ BaseModel proxies all mongoose methods instead of creating wrappers, ensuring:
 ## Configuration Examples
 
 ### Single Connection
+
 ```typescript
 defineConfig({
   connection: 'mongodb',
   connections: {
     mongodb: {
-      uri: env.get('MONGODB_URI')
-    }
-  }
+      uri: env.get('MONGODB_URI'),
+    },
+  },
 })
 ```
 
 ### Multiple Connections
+
 ```typescript
 defineConfig({
   connection: 'mongodb',
   connections: {
     mongodb: {
-      uri: env.get('MONGODB_URI')
+      uri: env.get('MONGODB_URI'),
     },
     mongodb_logs: {
-      uri: env.get('MONGODB_LOGS_URI')
+      uri: env.get('MONGODB_LOGS_URI'),
     },
     mongodb_analytics: {
       connection: {
         host: env.get('ANALYTICS_HOST'),
         port: env.get('ANALYTICS_PORT'),
-        database: 'analytics'
-      }
-    }
-  }
+        database: 'analytics',
+      },
+    },
+  },
 })
 ```
 
@@ -240,14 +263,17 @@ defineConfig({
 ## Dependencies
 
 ### Production
+
 - `mongoose`: ^8.9.4 - MongoDB ODM
 - `@poppinss/macroable`: ^1.0.2 - Macroable support
 - `@poppinss/utils`: ^6.8.3 - Utilities
 
 ### Peer
+
 - `@adonisjs/core`: ^6.2.0 - AdonisJS framework
 
 ### Development
+
 - TypeScript, ESLint, Prettier
 - AdonisJS tooling (assembler, tsconfig)
 
