@@ -1,5 +1,11 @@
 # adonisjs-mongoose
 
+## 0.0.4
+
+### Patch Changes
+
+- df884fa: Update linting and formatting
+
 ## 0.0.3
 
 ### Patch Changes
