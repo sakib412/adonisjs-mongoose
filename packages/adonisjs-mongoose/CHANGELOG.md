@@ -1,5 +1,11 @@
 # adonisjs-mongoose
 
+## 0.0.5
+
+### Patch Changes
+
+- 73539e3: fix: stub filename and configure
+
 ## 0.0.4
 
 ### Patch Changes
