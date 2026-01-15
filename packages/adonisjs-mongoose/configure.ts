@@ -19,7 +19,7 @@ export async function configure(command: Configure) {
   /**
    * Publish config file
    */
-  await codemods.makeUsingStub(stubsRoot, 'config/database.stub', {})
+  await codemods.makeUsingStub(stubsRoot, 'config/mongoose.stub', {})
 
   /**
    * Register provider
@@ -33,12 +33,7 @@ export async function configure(command: Configure) {
    */
   await codemods.defineEnvVariables({
     DEFAULT_MONGODB_CONNECTION: 'mongodb',
-    MONGODB_URI: '',
-    MONGODB_HOST: '127.0.0.1',
-    MONGODB_PORT: '27017',
-    MONGODB_DATABASE: 'adonis',
-    MONGODB_USER: '',
-    MONGODB_PASSWORD: '',
+    MONGODB_URI: 'mongodb://localhost:27017/adonisjs',
   })
 
   /**
