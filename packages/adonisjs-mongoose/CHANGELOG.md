@@ -1,5 +1,11 @@
 # adonisjs-mongoose
 
+## 0.0.6
+
+### Patch Changes
+
+- e66c1b3: fix: stub root path
+
 ## 0.0.5
 
 ### Patch Changes
