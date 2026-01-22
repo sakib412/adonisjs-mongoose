@@ -167,7 +167,13 @@ export class Connection extends EventEmitter implements MongooseConnectionContra
           reject(new Error(`Connection "${this.name}" timeout`))
         }, 30000) // 30 seconds timeout
 
-        this.#connection!.asPromise()
+        if (!this.#connection) {
+          clearTimeout(timeout)
+          return reject(new Error(`Connection "${this.name}" was not created successfully`))
+        }
+
+        this.#connection
+          .asPromise()
           .then(() => {
             clearTimeout(timeout)
             resolve()

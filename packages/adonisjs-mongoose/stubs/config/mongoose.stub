@@ -31,18 +31,6 @@ const databaseConfig = defineConfig({
       uri: env.get('MONGODB_URI'),
 
       /**
-       * Individual connection options
-       * Used only when uri is not provided
-       */
-      connection: {
-        host: env.get('MONGODB_HOST'),
-        port: env.get('MONGODB_PORT'),
-        database: env.get('MONGODB_DATABASE'),
-        user: env.get('MONGODB_USER'),
-        password: env.get('MONGODB_PASSWORD'),
-      },
-
-      /**
        * Mongoose connection options
        * @see https://mongoosejs.com/docs/connections.html#options
        */
