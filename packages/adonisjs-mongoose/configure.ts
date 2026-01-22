@@ -42,7 +42,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvValidations({
     leadingComment: 'Variables for configuring the MongoDB connection',
     variables: {
-      DEFAULT_MONGODB_CONNECTION: `Env.schema.string()`,
+      DEFAULT_MONGODB_CONNECTION: `Env.schema.enum(['mongodb'] as const)`,
       MONGODB_URI: `Env.schema.string()`,
     },
   })
