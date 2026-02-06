@@ -8,13 +8,21 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import Test from '#models/test'
 
 const ProductsController = () => import('#controllers/products_controller')
 
 router.get('/', async () => {
+  const test = await Test.find()
+
   return {
-    hello: 'world',
+    data: test,
   }
+})
+
+router.get('/test', async (ctx) => {
+  const res = await Test.insertOne({ name: 'Test Name', status: 'active', isActive: true })
+  return ctx.response.status(201).send(res)
 })
 
 // MongoDB Product API routes

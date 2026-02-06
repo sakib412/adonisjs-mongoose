@@ -1,6 +1,7 @@
 import Product from '#models/product'
 import Product2 from '#models/product_second'
 import type { HttpContext } from '@adonisjs/core/http'
+import db from 'adonisjs-mongoose/services/db'
 
 export default class ProductsController {
   /**
@@ -41,11 +42,19 @@ export default class ProductsController {
 
     // Execute queries
     const [products, total] = await Promise.all([
-      Product.find(query)
+      db
+        .connection('primary')
+        .collection('products')
+        .find(query)
         .skip(skip)
         .limit(Number.parseInt(limit))
-        .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
-        .lean(),
+        .sort({ [sortBy]: order === 'asc' ? 1 : -1 }),
+
+      // Product.find(query)
+      //   .skip(skip)
+      //   .limit(Number.parseInt(limit))
+      //   .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
+      //   .lean(),
       Product.countDocuments(query),
     ])
 
@@ -67,7 +76,11 @@ export default class ProductsController {
    */
   async show({ params, response }: HttpContext) {
     try {
-      const product = await Product.findById(params.id)
+      // const product = await Product.findById(params.id)
+      const product = await db
+        .connection('primary')
+        .collection('products')
+        .findOne({ _id: params.id })
 
       if (!product) {
         return response.notFound({
