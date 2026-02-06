@@ -1,5 +1,11 @@
 # adonisjs-mongoose
 
+## 0.1.0
+
+### Minor Changes
+
+- 8a649b1: Update service import location
+
 ## 0.0.6
 
 ### Patch Changes
