@@ -30,7 +30,9 @@ import type { DatabaseContract } from '../types/main.js'
  * // Usage
  * const users = await User.find({ name: 'John' })
  * ```
+ * @deprecated this will not give type safety, create model only via connection.model(...) from this package.
  */
+
 export class BaseModel {
   /**
    * Database instance (injected by provider)
