@@ -1,6 +1,7 @@
 # adonisjs-mongoose
 
 [![npm version](https://img.shields.io/npm/v/adonisjs-mongoose.svg?logo=npm)](https://www.npmjs.com/package/adonisjs-mongoose)
+[![npm downloads](https://img.shields.io/npm/dm/adonisjs-mongoose.svg?logo=npm)](https://www.npmjs.com/package/adonisjs-mongoose)
 [![license](https://img.shields.io/npm/l/adonisjs-mongoose.svg)](https://github.com/sakib412/adonisjs-mongoose/blob/main/packages/adonisjs-mongoose/LICENSE)
 [![AdonisJS](https://img.shields.io/badge/AdonisJS-v7-5A45FF.svg)](https://adonisjs.com)
 
