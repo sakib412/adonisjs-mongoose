@@ -1,68 +1,23 @@
-/*
- * adonisjs-mongoose
- *
- * (c) Najmus Sakib
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-import { RuntimeException } from '@poppinss/utils'
-import type { MongooseConnectionsList } from './types/main.js'
+import type { MongoConfig, MongoConnectionConfig } from './types.js'
 
 /**
- * Define config for mongoose connections
+ * Type-safe config builder, used inside `config/mongo.ts`.
  *
- * @param config - Mongoose configuration object
+ * Mirrors `defineConfig` from `@adonisjs/lucid`. Preserves the literal
+ * connection names so `mongo.connection('analytics')` is autocompleted
+ * and type-checked against the configured connections.
  *
  * @example
- * ```ts
  * export default defineConfig({
- *   connection: 'mongodb',
+ *   connection: env.get('MONGO_CONNECTION', 'primary'),
  *   connections: {
- *     mongodb: {
- *       uri: 'mongodb://localhost:27017/mydb',
- *       options: {}
- *     },
- *     mongodb_secondary: {
- *       connection: {
- *         host: 'localhost',
- *         port: 27017,
- *         database: 'secondary'
- *       }
- *     }
- *   }
+ *     primary: { uri: env.get('MONGO_URI') },
+ *     analytics: { uri: env.get('MONGO_ANALYTICS_URI') },
+ *   },
  * })
- * ```
  */
-export function defineConfig<Connections extends MongooseConnectionsList>(config: {
-  connection: keyof Connections
-  connections: Connections
-}): {
-  connection: keyof Connections
-  connections: Connections
-} {
-  if (!config) {
-    throw new RuntimeException('Invalid config. It must be an object')
-  }
-
-  if (!config.connections) {
-    throw new RuntimeException('Missing "connections" property in the mongoose config file')
-  }
-
-  if (!config.connection) {
-    throw new RuntimeException(
-      'Missing "connection" property in mongoose config. Specify a default connection to use'
-    )
-  }
-
-  if (!config.connections[config.connection]) {
-    throw new RuntimeException(
-      `Missing "connections.${String(
-        config.connection
-      )}". It is referenced by the "default" mongoose connection`
-    )
-  }
-
+export function defineConfig<Connections extends Record<string, MongoConnectionConfig>>(
+  config: MongoConfig<Connections>
+): MongoConfig<Connections> {
   return config
 }

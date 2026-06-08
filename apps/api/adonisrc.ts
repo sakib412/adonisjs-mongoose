@@ -1,19 +1,19 @@
 import { defineConfig } from '@adonisjs/core/app'
+import { indexEntities } from '@adonisjs/core'
 
 export default defineConfig({
   /*
   |--------------------------------------------------------------------------
-  | Experimental flags
+  | Lifecycle hooks
   |--------------------------------------------------------------------------
   |
-  | The following features will be enabled by default in the next major release
-  | of AdonisJS. You can opt into them today to avoid any breaking changes
-  | during upgrade.
+  | The "init" hooks run when the application is initialized. "indexEntities"
+  | scans controllers, middleware and other entities to build the registry
+  | used by the framework (required since AdonisJS v7).
   |
   */
-  experimental: {
-    mergeMultipartFieldsAndFiles: true,
-    shutdownInReverseOrder: true,
+  hooks: {
+    init: [indexEntities()],
   },
 
   /*
@@ -25,11 +25,7 @@ export default defineConfig({
   | will be scanned automatically from the "./commands" directory.
   |
   */
-  commands: [
-    () => import('@adonisjs/core/commands'),
-    () => import('@adonisjs/lucid/commands'),
-    () => import('@adonisjs/session/commands'),
-  ],
+  commands: [() => import('@adonisjs/core/commands'), () => import('adonisjs-mongoose/commands')],
 
   /*
   |--------------------------------------------------------------------------
@@ -49,10 +45,7 @@ export default defineConfig({
     },
     () => import('@adonisjs/core/providers/vinejs_provider'),
     () => import('@adonisjs/cors/cors_provider'),
-    () => import('@adonisjs/lucid/database_provider'),
-    () => import('@adonisjs/session/session_provider'),
-    () => import('@adonisjs/auth/auth_provider'),
-    () => import('adonisjs-mongoose/providers/mongoose_provider'),
+    () => import('adonisjs-mongoose/mongo_provider'),
   ],
 
   /*
@@ -77,12 +70,12 @@ export default defineConfig({
   tests: {
     suites: [
       {
-        files: ['tests/unit/**/*.spec(.ts|.js)'],
+        files: ['tests/unit/**/*.spec.{ts,js}'],
         name: 'unit',
         timeout: 2000,
       },
       {
-        files: ['tests/functional/**/*.spec(.ts|.js)'],
+        files: ['tests/functional/**/*.spec.{ts,js}'],
         name: 'functional',
         timeout: 30000,
       },

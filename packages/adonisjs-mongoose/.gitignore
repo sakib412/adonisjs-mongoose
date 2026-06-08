@@ -1,14 +1,4 @@
 node_modules
 build
-.DS_Store
-*.log
-.env
-.idea
-.vscode
-*.tgz
-coverage
-.nyc_output
-dist
-tmp
-.eslintcache
 .turbo
+*.tsbuildinfo

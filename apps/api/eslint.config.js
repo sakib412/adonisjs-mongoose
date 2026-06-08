@@ -1,8 +1,5 @@
 import { configApp } from '@adonisjs/eslint-config'
-export default configApp([
-  {
-    parserOptions: {
-      project: './tsconfig.json',
-    },
-  },
-])
+
+export default configApp({
+  ignores: ['build', '.adonisjs'],
+})

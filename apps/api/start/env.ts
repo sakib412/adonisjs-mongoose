@@ -15,33 +15,16 @@ export default await Env.create(new URL('../', import.meta.url), {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),
   APP_KEY: Env.schema.string(),
+  APP_NAME: Env.schema.string(),
   HOST: Env.schema.string({ format: 'host' }),
   LOG_LEVEL: Env.schema.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']),
 
   /*
   |----------------------------------------------------------
-  | Variables for configuring database connection
+  | Variables for adonisjs-mongoose
   |----------------------------------------------------------
   */
-  DB_HOST: Env.schema.string({ format: 'host' }),
-  DB_PORT: Env.schema.number(),
-  DB_USER: Env.schema.string(),
-  DB_PASSWORD: Env.schema.string.optional(),
-  DB_DATABASE: Env.schema.string(),
-
-  /*
-  |----------------------------------------------------------
-  | Variables for configuring session package
-  |----------------------------------------------------------
-  */
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
-
-  /*
-  |----------------------------------------------------------
-  | Variables for configuring mongoose connection
-  |----------------------------------------------------------
-  */
-  DEFAULT_MONGODB_CONNECTION: Env.schema.enum(['primary', 'secondary'] as const),
-  MONGODB_URI: Env.schema.string(),
-  MONGODB_SECONDARY_URI: Env.schema.string.optional(),
+  MONGO_CONNECTION: Env.schema.enum.optional(['primary', 'analytics'] as const),
+  MONGO_URI: Env.schema.string(),
+  MONGO_ANALYTICS_URI: Env.schema.string(),
 })

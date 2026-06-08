@@ -1,87 +1,72 @@
 {
   "name": "adonisjs-mongoose",
   "version": "0.1.0",
-  "description": "Mongoose provider for AdonisJS 6 with multi-connection support",
-  "main": "./build/index.js",
+  "description": "Mongoose ODM integration for AdonisJS — config-driven multiple connections, container-managed manager, models, ace command, REPL bindings and health checks.",
   "type": "module",
-  "files": [
-    "build",
-    "README.md",
-    "LICENSE",
-    "!index.ts",
-    "!build/test",
-    "!build/test-helpers",
-    "!build/*.tsbuildinfo"
-  ],
-  "engines": {
-    "node": ">=22"
+  "license": "MIT",
+  "author": "Najmus Sakib <nazmusakib412@gmail.com>",
+  "homepage": "https://github.com/sakib412/adonisjs-mongoose#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sakib412/adonisjs-mongoose.git",
+    "directory": "packages/adonisjs-mongoose"
   },
-  "packageManager": "pnpm@10.28.0",
-  "exports": {
-    ".": "./build/index.js",
-    "./types": "./build/src/types/main.js",
-    "./database": "./build/src/database/main.js",
-    "./services/db": "./build/services/db.js",
-    "./providers/mongoose_provider": "./build/providers/mongoose_provider.js"
-  },
-  "scripts": {
-    "format": "prettier --write .",
-    "lint": "eslint . --fix --cache",
-    "pretest": "pnpm run build",
-    "test": "node --loader=ts-node/esm --test",
-    "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
-    "check-types": "tsc --noEmit",
-    "prebuild": "pnpm run clean",
-    "build": "tsc",
-    "postbuild": "pnpm run copy:templates",
-    "dev": "tsc --watch",
-    "clean": "del-cli build",
-    "prepublishOnly": "pnpm run build"
+  "bugs": {
+    "url": "https://github.com/sakib412/adonisjs-mongoose/issues"
   },
   "keywords": [
     "adonisjs",
+    "adonis",
+    "adonisjs-v7",
     "mongoose",
     "mongodb",
     "odm",
     "database"
   ],
-  "author": "Najmus Sakib <nazmusakib412@gmail.com>",
-  "license": "MIT",
-  "homepage": "https://github.com/sakib412/adonisjs-mongoose#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sakib412/adonisjs-mongoose.git"
+  "exports": {
+    ".": "./build/index.js",
+    "./model": "./build/define_model.js",
+    "./mongo_provider": "./build/providers/mongo_provider.js",
+    "./services/main": "./build/services/main.js",
+    "./commands": "./build/commands/main.js",
+    "./types": "./build/types.js"
   },
-  "bugs": {
-    "url": "https://github.com/sakib412/adonisjs-mongoose/issues"
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build",
+    "!build/**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=24"
   },
-  "devDependencies": {
-    "@adonisjs/assembler": "^7.8.2",
-    "@adonisjs/core": "^6.20.0",
-    "@adonisjs/eslint-config": "^2.1.2",
-    "@adonisjs/prettier-config": "^1.4.5",
-    "@adonisjs/tsconfig": "^1.4.1",
-    "@swc/core": "^1.15.11",
-    "@types/node": "^24",
-    "copyfiles": "^2.4.1",
-    "del-cli": "^7.0.0",
-    "eslint": "^9.39.2",
-    "prettier": "^3.8.1",
-    "ts-node": "^10.9.2",
-    "turbo": "^2.8.3",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@poppinss/macroable": "^1.1.0",
-    "@poppinss/utils": "^6.10.1"
+  "scripts": {
+    "build": "rm -rf build && tsc -p tsconfig.build.json && node scripts/copy-stubs.mjs",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "clean": "rm -rf node_modules build .turbo",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "@adonisjs/core": "^6",
-    "mongoose": "^8 || ^9"
+    "@adonisjs/core": "^7.0.0",
+    "mongoose": "^9.0.0"
+  },
+  "devDependencies": {
+    "@adonisjs/core": "^7.3.4",
+    "@adonisjs/eslint-config": "^3.1.0",
+    "@adonisjs/prettier-config": "^1.4.5",
+    "@adonisjs/tsconfig": "^2.0.0",
+    "@types/node": "~25.6.2",
+    "eslint": "^10.4.1",
+    "mongoose": "^9.6.3",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.3"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "beta"
+    "access": "public"
   },
   "prettier": "@adonisjs/prettier-config"
 }

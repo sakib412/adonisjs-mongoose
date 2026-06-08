@@ -1,6 +1,6 @@
 {
   "name": "base",
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
     "check-types": "turbo check-types",
     "dev": "turbo dev",
@@ -11,7 +11,7 @@
     "publish-package": "changeset publish"
   },
   "devDependencies": {
-    "turbo": "^2.7.4",
-    "@changesets/cli": "^2.29.8"
+    "@changesets/cli": "^2.29.8",
+    "turbo": "^2.7.4"
   }
 }

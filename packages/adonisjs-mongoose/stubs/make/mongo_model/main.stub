@@ -1,0 +1,20 @@
+{{#var modelName = generators.modelName(entity.name)}}
+{{#var modelFileName = generators.modelFileName(entity.name)}}
+{{{
+  exports({
+    to: app.modelsPath('mongo', entity.path, modelFileName)
+  })
+}}}
+import {Schema, type InferSchemaType} from 'mongoose'
+import {defineMongoModel} from 'adonisjs-mongoose/model'
+
+const schema = new Schema(
+  {
+    // define your fields here
+  },
+  {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, minimize: false},
+)
+
+export type {{ modelName }}Doc = InferSchemaType<typeof schema>
+
+export const {{ modelName }} = defineMongoModel('{{ modelName }}', schema{{{ optionsArg }}})
