@@ -258,16 +258,6 @@ two connections (`primary` + `analytics`), a model on each, user CRUD, the
 health endpoint, and a `/api/demo/multi-connection` route that proves the
 connections are isolated. See its [README](../../apps/api/README.md).
 
-## Provenance
-
-Releases are published from CI with [npm provenance](https://docs.npmjs.com/generating-provenance-statements),
-so each version is cryptographically linked to the exact source commit and
-workflow that built it. Verify it with:
-
-```sh
-npm audit signatures
-```
-
 ## License
 
 [MIT](./LICENSE) © Najmus Sakib

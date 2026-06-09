@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
-- 1a7593b: Releases now ship with a working npm provenance attestation (the CI publish
-  writes the `provenance` setting to the npmrc that `pnpm publish` actually
-  reads). Verify with `npm audit signatures`.
+- Maintenance release: documentation and CI cleanup, no API changes. (npm
+  provenance was attempted but reverted — it is not supported by the
+  changesets + pnpm publish path used here.)
 
 ## 0.2.4
 
