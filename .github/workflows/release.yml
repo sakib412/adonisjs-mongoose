@@ -4,10 +4,12 @@ name: Release
 # Merging that PR publishes the bumped package(s) to npm and creates a
 # GitHub release for each.
 #
-# workflow_dispatch is a manual fallback: GitHub does not trigger `push`
-# workflows for commits made by the Actions bot (GITHUB_TOKEN), so merging
-# the bot-authored version PR may not auto-start this run. Trigger it from
-# the Actions tab (or `gh workflow run Release`) to publish in that case.
+# Fully automatic publish-on-merge requires the GH_PAT secret (a Personal
+# Access Token with repo / contents+pull-requests write). With it, the
+# version PR is created by a real user, so merging it triggers this run.
+# Without it the workflow falls back to GITHUB_TOKEN — which does NOT start
+# new runs for bot commits, so after merging the version PR you must trigger
+# this manually (Actions tab → Run workflow, or `gh workflow run Release`).
 on:
   push:
     branches:
@@ -27,6 +29,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # PAT (if set) so the version PR is authored by a real user and its
+          # merge triggers this workflow; falls back to GITHUB_TOKEN otherwise.
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -52,6 +58,6 @@ jobs:
           commit: 'RELEASING: Releasing package(s)'
           title: 'RELEASING: Releasing package(s)'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
