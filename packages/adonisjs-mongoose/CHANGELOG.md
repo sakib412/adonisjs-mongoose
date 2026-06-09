@@ -1,5 +1,13 @@
 # adonisjs-mongoose
 
+## 0.2.3
+
+### Patch Changes
+
+- 137177a: Drop `publishConfig.provenance`. Provenance is now driven by the CI workflow
+  (`NPM_CONFIG_PROVENANCE`), so publishing locally no longer fails for lack of
+  an OIDC token while CI publishes still carry a provenance attestation.
+
 ## 0.2.2
 
 ### Patch Changes
