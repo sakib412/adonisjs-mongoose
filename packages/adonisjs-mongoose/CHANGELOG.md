@@ -1,5 +1,11 @@
 # adonisjs-mongoose
 
+## 0.2.1
+
+### Patch Changes
+
+- d9f6132: Add an npm downloads badge to the README.
+
 ## 0.2.0
 
 ### Minor Changes
