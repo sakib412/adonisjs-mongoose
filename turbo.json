@@ -11,7 +11,7 @@
     },
     "check-types": {
       "dependsOn": [
-        "^check-types"
+        "^build"
       ]
     },
     "dev": {
@@ -20,7 +20,7 @@
     },
     "lint": {
       "dependsOn": [
-        "^lint"
+        "^build"
       ]
     },
     "format": {
