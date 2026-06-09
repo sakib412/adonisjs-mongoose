@@ -35,6 +35,38 @@ export interface MongoConfig<Connections extends MongoConnectionsList = MongoCon
   connection: string
 
   /**
+   * Treat Mongo as a hard dependency. Drives two behaviours:
+   *
+   * - **Boot** (only when {@link MongoConfig.eager} is on): the default
+   *   connection is awaited at startup and a failure throws, crashing the
+   *   app rather than serving traffic against an unreachable database.
+   * - **Health** ({@link MongoConnectionCheck}): an unreachable connection
+   *   reports `error` (the report's `isHealthy` becomes `false`) instead of
+   *   `warning`.
+   *
+   * Leave `false` (default) when Mongo backs only part of the app: boot
+   * never crashes on a Mongo outage, and the health report degrades to a
+   * non-fatal `warning` so the rest of the app keeps serving.
+   *
+   * @default false
+   */
+  failFast?: boolean
+
+  /**
+   * Open the default connection at boot (in the `web` environment) instead
+   * of on first query. The connect is non-blocking unless
+   * {@link MongoConfig.failFast} is on — it warms the pool so the first
+   * request avoids the connect latency, but a failure only logs (and the
+   * driver keeps retrying) rather than blocking startup.
+   *
+   * Set `false` for a fully lazy connection that opens on first use. Other,
+   * non-default connections are always lazy regardless of this flag.
+   *
+   * @default true
+   */
+  eager?: boolean
+
+  /**
    * Map of connection name -> connection config.
    */
   connections: Connections

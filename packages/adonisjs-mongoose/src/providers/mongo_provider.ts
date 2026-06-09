@@ -14,9 +14,9 @@ declare module '@adonisjs/core/types' {
  *
  * - `register()` binds the {@link MongoManager} singleton from
  *   `config/mongoose`.
- * - `start()` eagerly opens the default connection in the `web`
- *   environment so the app fails fast on a bad URI (ace commands skip
- *   this and connect on demand).
+ * - `start()` opens the default connection in the `web` environment, with
+ *   behaviour driven by the `eager` and `failFast` config flags (see the
+ *   method for the matrix). Ace commands skip this and connect on demand.
  * - `boot()` registers REPL helpers when running `node ace repl`.
  * - `shutdown()` closes every open connection.
  */
@@ -41,10 +41,38 @@ export default class MongoProvider {
     }
   }
 
+  /**
+   * Open the default connection at boot, in the `web` environment only.
+   *
+   * | `eager` | `failFast` | behaviour                                          |
+   * | ------- | ---------- | -------------------------------------------------- |
+   * | `false` | (any)      | no-op — connect lazily on first query              |
+   * | `true`  | `false`    | non-blocking connect; a failure only logs (default)|
+   * | `true`  | `true`     | awaited connect; a failure throws and crashes boot |
+   *
+   * Non-`web` environments (ace, tests, repl, queue workers) always connect
+   * on demand.
+   */
   async start() {
     if (this.app.getEnvironment() !== 'web') return
+
     const mongo = await this.app.container.make('mongo')
-    await mongo.connect()
+    if (!mongo.eager) return
+
+    if (mongo.failFast) {
+      // Hard dependency: block boot until connected, surfacing a bad URI or
+      // an unreachable server as a startup crash.
+      await mongo.connect()
+      return
+    }
+
+    // Soft dependency: warm the pool without blocking boot. The driver keeps
+    // retrying in the background, so we only log the initial failure rather
+    // than letting an unhandled rejection take the process down.
+    const logger = await this.app.container.make('logger')
+    mongo.connect().catch((error) => {
+      logger.error({ err: error }, 'Eager Mongo connection failed; will retry in the background')
+    })
   }
 
   async shutdown() {

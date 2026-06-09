@@ -23,6 +23,7 @@ export const Event = defineMongoModel('Event', eventSchema, { connection: 'analy
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configure connections](#configure-connections)
+- [Connection lifecycle](#connection-lifecycle)
 - [Service alias](#service-alias)
 - [Using connections](#using-connections)
 - [Defining models](#defining-models)
@@ -44,11 +45,13 @@ export const Event = defineMongoModel('Event', eventSchema, { connection: 'analy
   connection (no reliance on Mongoose's global model registry), so a model can
   target any database.
 - ❤️ **Health check** — `MongoConnectionCheck` integrates with
-  `@adonisjs/core/health`.
+  `@adonisjs/core/health`; severity follows `failFast` (fatal vs degraded).
 - 🧰 **Ace command** — `node ace make:mongo-model` scaffolds a model.
 - 🐚 **REPL binding** — `loadMongo()` exposes the manager inside `node ace repl`.
-- ♻️ **Lifecycle aware** — eagerly opens the default connection on web boot
-  (fail-fast) and gracefully closes every connection on shutdown.
+- ♻️ **Lifecycle aware** — opens the default connection on web boot and
+  gracefully closes every connection on shutdown. **Hard or soft dependency,
+  your choice**: `failFast` decides whether a Mongo outage crashes the app or
+  just degrades it (see [Connection lifecycle](#connection-lifecycle)).
 
 ## Requirements
 
@@ -102,6 +105,9 @@ import { defineConfig, type InferConnections } from 'adonisjs-mongoose'
 const mongoConfig = defineConfig({
   connection: env.get('MONGO_CONNECTION', 'primary'),
 
+  failFast: false, // Mongo a hard dependency? (default false — see below)
+  eager: true,     // open the default connection at boot? (default true)
+
   connections: {
     primary: {
       uri: env.get('MONGO_URI'),
@@ -122,6 +128,53 @@ declare module 'adonisjs-mongoose/types' {
 
 `clientOptions` is forwarded verbatim to `mongoose.createConnection(uri, options)`
 (pool sizing, timeouts, TLS, etc.).
+
+## Connection lifecycle
+
+Two top-level flags decide how the app reacts when Mongo is unreachable —
+**at boot** and **per request**. Pick based on whether Mongo is a hard or soft
+dependency.
+
+### `failFast` (default `false`)
+
+Declares Mongo a **hard dependency**:
+
+- **Boot** (only when `eager`): the default connection is *awaited* at
+  startup, so a bad URI or an unreachable server **crashes the app** instead
+  of serving traffic against a dead database.
+- **Health** ([`MongoConnectionCheck`](#health-check)): an unreachable
+  connection reports a fatal `error` (the report's `isHealthy` is `false`).
+
+Leave it `false` when Mongo backs only part of the app: boot never crashes on
+a Mongo outage, and the health check degrades to a non-fatal `warning` so the
+rest of the app keeps serving.
+
+### `eager` (default `true`)
+
+Opens the default connection at boot (web only) to warm the pool, so the first
+request avoids the connect latency. The connect is **non-blocking** unless
+`failFast` is on — a failure only logs while the driver retries in the
+background. Set `false` to connect lazily on first query. Non-default
+connections are always lazy.
+
+| `eager` | `failFast` | Mongo down at boot |
+|---|---|---|
+| `true` *(default)* | `false` *(default)* | app boots; Mongo routes fail per-request; `/health` warns |
+| `true` | `true` | **boot crashes** (hard dependency) |
+| `false` | *(any)* | app boots; connection opens on first use |
+
+### Runtime: when Mongo dies *after* boot
+
+The app never crashes — only queries that touch Mongo fail, and the driver
+reconnects automatically. Tune *how fast* those queries fail (vs. hang) via
+`clientOptions`:
+
+```ts
+clientOptions: {
+  serverSelectionTimeoutMS: 5000, // fail a query ~5s after Mongo is unreachable (default 30s)
+  // bufferCommands stays on by default, so a brief blip is transparently retried
+}
+```
 
 ## Service alias
 
@@ -144,10 +197,11 @@ mongo.connection('analytics')  // named — 'nope' is a compile error
 await mongo.connect('analytics') // open + await readiness (fail fast)
 ```
 
-Connections open **lazily** on first use. The provider eagerly opens the
-**default** connection on web boot, so the app fails fast on a bad URI. In
-non-web environments (ace commands, tests, queue workers) call
-`await mongo.connect(name)` first if you need to fail fast before querying.
+Connections open **lazily** on first use. The provider opens the **default**
+connection on web boot (configurable — see [Connection
+lifecycle](#connection-lifecycle)). In non-web environments (ace commands,
+tests, queue workers) call `await mongo.connect(name)` first if you need to
+fail fast before querying.
 
 ## Defining models
 
@@ -197,10 +251,17 @@ import { HealthChecks } from '@adonisjs/core/health'
 import { MongoConnectionCheck } from 'adonisjs-mongoose'
 
 export const healthChecks = new HealthChecks().register([
-  new MongoConnectionCheck(mongo),              // default connection
-  new MongoConnectionCheck(mongo, 'analytics'), // a named connection
+  new MongoConnectionCheck(mongo),                    // default connection
+  new MongoConnectionCheck(mongo, 'analytics'),       // a named connection
+  new MongoConnectionCheck(mongo, 'analytics', 5000), // + custom probe timeout (ms)
 ])
 ```
+
+Severity follows [`failFast`](#failfast-default-false): an unreachable
+connection reports a fatal `error` when `failFast` is on, otherwise a non-fatal
+`warning` (the overall report stays healthy while surfacing the outage). The
+probe is capped by a timeout (default `2000`ms) so a down server can't hang the
+endpoint for the driver's full `serverSelectionTimeoutMS`.
 
 ```ts
 // start/routes.ts
@@ -250,6 +311,8 @@ intentional and the caller's responsibility.
 | `report()` | Snapshot of every instantiated connection's state. |
 | `closeAll()` | Gracefully close all open connections (called on shutdown). |
 | `defaultConnection` | The default connection name from config. |
+| `failFast` | Whether Mongo is configured as a hard dependency (default `false`). |
+| `eager` | Whether the default connection opens at boot (default `true`). |
 
 ## Demo app
 
