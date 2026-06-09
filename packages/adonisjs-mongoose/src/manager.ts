@@ -40,6 +40,23 @@ export class MongoManager<ConnectionsList extends MongoConnectionsList = MongoCo
   }
 
   /**
+   * Whether Mongo is configured as a hard dependency. Read by the provider
+   * (to decide if a boot-time connection failure is fatal) and by
+   * {@link MongoConnectionCheck} (to decide error vs warning severity).
+   */
+  get failFast(): boolean {
+    return this.config.failFast ?? false
+  }
+
+  /**
+   * Whether the default connection should be opened at boot rather than on
+   * first use. Defaults to `true`.
+   */
+  get eager(): boolean {
+    return this.config.eager ?? true
+  }
+
+  /**
    * Resolve a named connection, creating it on first access. Defaults to
    * the configured default connection. The name is constrained to the
    * configured connections (via {@link MongoConnections} augmentation).

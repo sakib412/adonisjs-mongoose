@@ -7,6 +7,16 @@ import {defineConfig, type InferConnections} from 'adonisjs-mongoose'
 const mongoConfig = defineConfig({
   connection: env.get('MONGO_CONNECTION', 'primary'),
 
+  // Treat Mongo as a hard dependency. When true, a failed connection crashes
+  // boot (if `eager`) and the health check reports a fatal error. Leave false
+  // when Mongo backs only part of the app: boot survives an outage and the
+  // health check degrades to a non-fatal warning.
+  failFast: false,
+
+  // Open the default connection at boot (non-blocking unless `failFast`) to
+  // warm the pool. Set false to connect lazily on first query instead.
+  eager: true,
+
   connections: {
     primary: {
       uri: env.get('MONGO_URI'),
