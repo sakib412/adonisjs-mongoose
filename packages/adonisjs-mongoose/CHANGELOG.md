@@ -1,5 +1,13 @@
 # adonisjs-mongoose
 
+## 0.2.5
+
+### Patch Changes
+
+- 1a7593b: Releases now ship with a working npm provenance attestation (the CI publish
+  writes the `provenance` setting to the npmrc that `pnpm publish` actually
+  reads). Verify with `npm audit signatures`.
+
 ## 0.2.4
 
 ### Patch Changes
