@@ -27,7 +27,7 @@ export class MongoManager<ConnectionsList extends MongoConnectionsList = MongoCo
     // Fail fast on a misconfigured default rather than on first use.
     if (!config.connections[config.connection]) {
       throw new Error(
-        `Default Mongo connection "${config.connection}" is not defined in config/mongo`
+        `Default Mongo connection "${config.connection}" is not defined in config/mongoose`
       )
     }
   }
@@ -44,7 +44,7 @@ export class MongoManager<ConnectionsList extends MongoConnectionsList = MongoCo
    * the configured default connection. The name is constrained to the
    * configured connections (via {@link MongoConnections} augmentation).
    *
-   * @throws Error if the name is not defined in `config/mongo`.
+   * @throws Error if the name is not defined in `config/mongoose`.
    */
   connection<Name extends keyof ConnectionsList>(name?: Name): Connection {
     const resolved = (name ?? this.config.connection) as string
@@ -54,7 +54,7 @@ export class MongoManager<ConnectionsList extends MongoConnectionsList = MongoCo
 
     const connectionConfig = this.config.connections[resolved]
     if (!connectionConfig) {
-      throw new Error(`Mongo connection "${resolved}" is not defined in config/mongo`)
+      throw new Error(`Mongo connection "${resolved}" is not defined in config/mongoose`)
     }
 
     const connection = mongoose.createConnection(

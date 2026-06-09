@@ -41,7 +41,7 @@ export interface MongoConfig<Connections extends MongoConnectionsList = MongoCon
 }
 
 /**
- * Interface augmented by the user inside `config/mongo.ts` to register the
+ * Interface augmented by the user inside `config/mongoose.ts` to register the
  * available connection names, e.g.
  *
  * ```ts

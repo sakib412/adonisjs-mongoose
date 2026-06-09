@@ -13,7 +13,7 @@ declare module '@adonisjs/core/types' {
  * database provider.
  *
  * - `register()` binds the {@link MongoManager} singleton from
- *   `config/mongo`.
+ *   `config/mongoose`.
  * - `start()` eagerly opens the default connection in the `web`
  *   environment so the app fails fast on a bad URI (ace commands skip
  *   this and connect on demand).
@@ -25,7 +25,7 @@ export default class MongoProvider {
 
   register() {
     this.app.container.singleton('mongo', async (resolver) => {
-      const config = this.app.config.get<MongoConfig>('mongo')
+      const config = this.app.config.get<MongoConfig>('mongoose')
       const logger = await resolver.make('logger')
       // The runtime manager is connection-agnostic; the container binding
       // is typed as MongoService so resolved instances carry the user's

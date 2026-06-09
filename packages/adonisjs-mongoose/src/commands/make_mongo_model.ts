@@ -17,7 +17,7 @@ export default class MakeMongoModel extends BaseCommand {
   declare name: string
 
   @flags.string({
-    description: 'Mongo connection (from config/mongo) the model binds to',
+    description: 'Mongo connection (from config/mongoose) the model binds to',
   })
   declare connection?: string
 

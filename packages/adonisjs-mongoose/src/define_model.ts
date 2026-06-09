@@ -8,7 +8,7 @@ import mongo from './services/main.js'
  */
 export interface DefineMongoModelOptions {
   /**
-   * Name of the connection (from `config/mongo`) this model binds to.
+   * Name of the connection (from `config/mongoose`) this model binds to.
    * Constrained to the configured connection names; unknown names are a
    * compile error. Defaults to the configured default connection.
    */
