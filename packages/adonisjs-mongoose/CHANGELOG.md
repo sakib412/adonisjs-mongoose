@@ -1,5 +1,12 @@
 # adonisjs-mongoose
 
+## 0.2.4
+
+### Patch Changes
+
+- 2d84477: Document npm provenance: releases are published from CI with a provenance
+  attestation linking each version to its source commit and build workflow.
+
 ## 0.2.3
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "adonisjs-mongoose",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Mongoose ODM integration for AdonisJS — config-driven multiple connections, container-managed manager, models, ace command, REPL bindings and health checks.",
   "type": "module",
   "license": "MIT",
