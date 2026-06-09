@@ -2,11 +2,17 @@ name: Release
 
 # When changesets land on main, this opens a "Version Packages" PR.
 # Merging that PR publishes the bumped package(s) to npm and creates a
-# GitHub release for each — no manual steps.
+# GitHub release for each.
+#
+# workflow_dispatch is a manual fallback: GitHub does not trigger `push`
+# workflows for commits made by the Actions bot (GITHUB_TOKEN), so merging
+# the bot-authored version PR may not auto-start this run. Trigger it from
+# the Actions tab (or `gh workflow run Release`) to publish in that case.
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
