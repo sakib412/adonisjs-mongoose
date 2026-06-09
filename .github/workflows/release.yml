@@ -51,11 +51,13 @@ jobs:
         run: pnpm --filter adonisjs-mongoose build
 
       - name: Enable npm provenance
-        # `changeset publish` shells out to `pnpm publish`, which honors the
-        # `provenance` setting from .npmrc — but NOT the NPM_CONFIG_PROVENANCE
-        # env var or publishConfig.provenance. Written only in CI so local
-        # publishes (no OIDC token) are unaffected. Needs `id-token: write`.
-        run: echo "provenance=true" >> .npmrc
+        # `changeset publish` shells out to `pnpm publish`, which reads the
+        # `provenance` config from the .npmrc that setup-node configured
+        # (NPM_CONFIG_USERCONFIG — the same file the auth token lives in), not
+        # the project-root .npmrc, the NPM_CONFIG_PROVENANCE env var, or
+        # publishConfig.provenance. CI-only, so local publishes are
+        # unaffected. Needs `id-token: write`.
+        run: echo "provenance=true" >> "${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
 
       - name: Create release PR or publish
         uses: changesets/action@v1
