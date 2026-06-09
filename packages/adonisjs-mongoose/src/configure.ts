@@ -5,14 +5,14 @@ import { stubsRoot } from './stubs/main.js'
  * Configure hook run by `node ace add adonisjs-mongoose` (or
  * `node ace configure adonisjs-mongoose`).
  *
- * - Publishes `config/mongo.ts`.
+ * - Publishes `config/mongoose.ts`.
  * - Registers the provider and commands in `adonisrc.ts`.
  * - Defines the `MONGO_URI` env var + its validation.
  */
 export async function configure(command: Configure) {
   const codemods = await command.createCodemods()
 
-  await codemods.makeUsingStub(stubsRoot, 'config/mongo.stub', {})
+  await codemods.makeUsingStub(stubsRoot, 'config/mongoose.stub', {})
 
   await codemods.updateRcFile((rcFile) => {
     rcFile.addProvider('adonisjs-mongoose/mongo_provider')

@@ -8,7 +8,7 @@ through the workspace (`adonisjs-mongoose: workspace:*`).
 
 | Feature | Where |
 |---|---|
-| Multiple connections + type augmentation | [`config/mongo.ts`](./config/mongo.ts) |
+| Multiple connections + type augmentation | [`config/mongoose.ts`](./config/mongoose.ts) |
 | Service alias re-export | [`app/services/mongo.ts`](./app/services/mongo.ts) |
 | Model on the **default** connection | [`app/models/mongo/user.ts`](./app/models/mongo/user.ts) |
 | Model on a **named** connection | [`app/models/mongo/event.ts`](./app/models/mongo/event.ts) |

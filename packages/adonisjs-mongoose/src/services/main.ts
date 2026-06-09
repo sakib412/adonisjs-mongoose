@@ -22,7 +22,7 @@ await app.booted(async () => {
   } catch (error) {
     throw new Error(
       'Failed to resolve the Mongo manager. Ensure "adonisjs-mongoose/mongo_provider" ' +
-        'is registered in adonisrc.ts and config/mongo.ts exists. Cause: ' +
+        'is registered in adonisrc.ts and config/mongoose.ts exists. Cause: ' +
         (error instanceof Error ? error.message : String(error))
     )
   }

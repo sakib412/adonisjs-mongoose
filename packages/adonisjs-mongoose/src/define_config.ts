@@ -1,7 +1,7 @@
 import type { MongoConfig, MongoConnectionConfig } from './types.js'
 
 /**
- * Type-safe config builder, used inside `config/mongo.ts`.
+ * Type-safe config builder, used inside `config/mongoose.ts`.
  *
  * Mirrors `defineConfig` from `@adonisjs/lucid`. Preserves the literal
  * connection names so `mongo.connection('analytics')` is autocompleted

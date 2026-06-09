@@ -36,7 +36,7 @@ export const Event = defineMongoModel('Event', eventSchema, { connection: 'analy
 ## Features
 
 - 🔌 **Multiple connections** — declare any number of named connections in
-  `config/mongo.ts`, opened lazily and cached.
+  `config/mongoose.ts`, opened lazily and cached.
 - 🛡️ **Connection-name type safety** — `mongo.connection(name)` and
   `defineMongoModel(..., { connection })` reject names that aren't configured,
   at compile time.
@@ -70,7 +70,7 @@ node ace add adonisjs-mongoose
 
 This installs the package and runs the configure hook, which:
 
-- publishes `config/mongo.ts`,
+- publishes `config/mongoose.ts`,
 - registers the provider and commands in `adonisrc.ts`,
 - adds the `MONGO_URI` env var and its validation.
 
@@ -86,7 +86,7 @@ node ace configure adonisjs-mongoose
 
 ## Configure connections
 
-`config/mongo.ts` holds a default connection name and a map of named
+`config/mongoose.ts` holds a default connection name and a map of named
 connections. The `declare module` block is **required for connection-name type
 safety** — it feeds the configured names into `mongo.connection(name)` and
 `defineMongoModel(..., { connection })`.

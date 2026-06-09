@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.configPath('mongo.ts') })
+  exports({ to: app.configPath('mongoose.ts') })
 }}}
 import env from '#start/env'
 import {defineConfig, type InferConnections} from 'adonisjs-mongoose'
@@ -21,9 +21,9 @@ export default mongoConfig
 
 /**
  * Registers the configured connection names with the package types so that
- * `mongo.connection(name)` and `defineMongoModel(..., {connection})` reject
+ * mongo.connection(name) and defineMongoModel(..., {connection}) reject
  * unknown names. The module specifier MUST be exactly
- * 'adonisjs-mongoose/types' — a typo silently disables this safety.
+ * 'adonisjs-mongoose/types' -- a typo silently disables this safety.
  */
 declare module 'adonisjs-mongoose/types' {
   interface MongoConnections extends InferConnections<typeof mongoConfig> {}
