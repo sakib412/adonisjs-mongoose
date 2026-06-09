@@ -1,5 +1,12 @@
 # adonisjs-mongoose
 
+## 0.2.2
+
+### Patch Changes
+
+- 98dabf9: Publish with npm provenance attestation. Builds published from CI now carry
+  a verifiable link back to the source commit and workflow.
+
 ## 0.2.1
 
 ### Patch Changes
