@@ -55,14 +55,14 @@
     "mongoose": "^9.0.0"
   },
   "devDependencies": {
-    "@adonisjs/core": "^7.3.4",
+    "@adonisjs/core": "^7.3.5",
     "@adonisjs/eslint-config": "^3.1.0",
-    "@adonisjs/prettier-config": "^1.4.5",
+    "@adonisjs/prettier-config": "^1.5.0",
     "@adonisjs/tsconfig": "^2.0.0",
     "@types/node": "~25.6.2",
-    "eslint": "^10.4.1",
-    "mongoose": "^9.6.3",
-    "prettier": "^3.8.1",
+    "eslint": "^10.7.0",
+    "mongoose": "^9.7.4",
+    "prettier": "^3.9.5",
     "typescript": "~6.0.3"
   },
   "publishConfig": {
